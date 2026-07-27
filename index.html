@@ -17,10 +17,12 @@
   .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
   .card-title { font-size: 16px; font-weight: 600; color: #222; }
   .card-desc { font-size: 13px; color: #888; line-height: 1.5; }
-  .btn { display: inline-block; margin-top: 8px; padding: 10px 20px; background: #ff6b00; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; text-decoration: none; text-align: center; transition: background 0.15s; }
+  .btn { display: inline-block; padding: 10px 20px; background: #ff6b00; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; text-decoration: none; text-align: center; transition: background 0.15s; }
   .btn:hover { background: #e05e00; }
   .btn-secondary { background: white; color: #ff6b00; border: 1.5px solid #ff6b00; }
   .btn-secondary:hover { background: #fff5ee; }
+  .btn-row { display: flex; gap: 8px; margin-top: 8px; }
+  .btn-row .btn { flex: 1; }
   .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   .badge-hurrier { background: #fff0e6; color: #cc5500; }
   .badge-roster { background: #e6f0ff; color: #1a4fa3; }
@@ -46,7 +48,10 @@
       <div class="card-title">Revoke All Breaks</div>
       <div class="card-desc">بيفك كل أنواع البريكات للطيارين في الشيت</div>
       <div class="updated">Updated: 27/07/2026</div>
-      <a class="btn" href="https://raw.githubusercontent.com/naderfakhry-creator/talabat-ops-hub/main/bots/revoke_all/run_revoke_all.bat" download>تحميل وتشغيل</a>
+      <div class="btn-row">
+        <a class="btn btn-secondary" href="setup.html?bot=revoke_all">تحميل</a>
+        <a class="btn" href="https://raw.githubusercontent.com/naderfakhry-creator/talabat-ops-hub/main/bots/revoke_all/run_revoke_all.bat" download>تشغيل</a>
+      </div>
     </div>
 
     <div class="card">
@@ -54,7 +59,10 @@
       <div class="card-title">Revoke Main Breaks</div>
       <div class="card-desc">بيفك البريكات العادية بس — بيتجنب بريكات السيستم</div>
       <div class="updated">Updated: 27/07/2026</div>
-      <a class="btn" href="https://raw.githubusercontent.com/naderfakhry-creator/talabat-ops-hub/main/bots/revoke_main/run_revoke_main.bat" download>تحميل وتشغيل</a>
+      <div class="btn-row">
+        <a class="btn btn-secondary" href="setup.html?bot=revoke_main">تحميل</a>
+        <a class="btn" href="https://raw.githubusercontent.com/naderfakhry-creator/talabat-ops-hub/main/bots/revoke_main/run_revoke_main.bat" download>تشغيل</a>
+      </div>
     </div>
 
     <div class="card">
@@ -62,7 +70,7 @@
       <div class="card-title">Extend Shifts</div>
       <div class="card-desc">بيمد الشيفتات للطيارين أوتوماتيك</div>
       <div class="updated">قريباً</div>
-      <button class="btn btn-secondary" disabled style="opacity:0.5;cursor:not-allowed;">قريباً</button>
+      <button class="btn btn-secondary" disabled style="opacity:0.5;cursor:not-allowed;margin-top:8px;">قريباً</button>
     </div>
 
   </div>
@@ -75,7 +83,7 @@
       <div class="card-title">Remove SP</div>
       <div class="card-desc">بيشيل الزون من الطيارين عشان يوقفهم</div>
       <div class="updated">قريباً</div>
-      <button class="btn btn-secondary" disabled style="opacity:0.5;cursor:not-allowed;">قريباً</button>
+      <button class="btn btn-secondary" disabled style="opacity:0.5;cursor:not-allowed;margin-top:8px;">قريباً</button>
     </div>
 
     <div class="card">
@@ -83,7 +91,7 @@
       <div class="card-title">Add SP</div>
       <div class="card-desc">بيضيف الزون للطيارين على الروستر</div>
       <div class="updated">قريباً</div>
-      <button class="btn btn-secondary" disabled style="opacity:0.5;cursor:not-allowed;">قريباً</button>
+      <button class="btn btn-secondary" disabled style="opacity:0.5;cursor:not-allowed;margin-top:8px;">قريباً</button>
     </div>
 
   </div>
