@@ -51,19 +51,22 @@ const bots = {
     title: "Revoke All Breaks",
     desc: "بيفك كل أنواع البريكات للطيارين في الشيت",
     py_raw: "https://raw.githubusercontent.com/naderfakhry-creator/talabat-ops-hub/main/bots/revoke_all/hurrier_bot.py",
-    bat_raw: "https://raw.githubusercontent.com/naderfakhry-creator/talabat-ops-hub/main/bots/revoke_all/run_revoke_all.bat"
+    bat_raw: "https://raw.githubusercontent.com/naderfakhry-creator/talabat-ops-hub/main/bots/revoke_all/run_revoke_all.bat",
+    pip: "pip install selenium gspread google-auth"
   },
   revoke_main: {
     title: "Revoke Main Breaks",
     desc: "بيفك البريكات العادية بس — بيتجنب بريكات السيستم",
     py_raw: "https://raw.githubusercontent.com/naderfakhry-creator/talabat-ops-hub/main/bots/revoke_main/hurrier_bot.py",
-    bat_raw: "https://raw.githubusercontent.com/naderfakhry-creator/talabat-ops-hub/main/bots/revoke_main/run_revoke_main.bat"
+    bat_raw: "https://raw.githubusercontent.com/naderfakhry-creator/talabat-ops-hub/main/bots/revoke_main/run_revoke_main.bat",
+    pip: "pip install selenium gspread google-auth"
   },
   extend_shifts: {
     title: "Extend Shifts",
     desc: "بيمد الشيفتات للطيارين حسب طلب الوكلاء أوتوماتيك",
     py_raw: "https://raw.githubusercontent.com/naderfakhry-creator/talabat-ops-hub/main/bots/extend_shifts/extend_shifts_bot.py",
-    bat_raw: "https://raw.githubusercontent.com/naderfakhry-creator/talabat-ops-hub/main/bots/extend_shifts/run_extension.bat"
+    bat_raw: "https://raw.githubusercontent.com/naderfakhry-creator/talabat-ops-hub/main/bots/extend_shifts/run_extension.bat",
+    pip: "pip install selenium gspread google-auth webdriver-manager"
   }
 };
 
@@ -141,7 +144,7 @@ if (!bot) {
         <div class="step-content">
           <h3>تثبيت المتطلبات</h3>
           <p>افتح CMD وكتب الأمر ده مرة وحدة بس</p>
-          <p style="background:#f5f5f5;padding:8px 12px;border-radius:6px;font-family:monospace;margin-top:8px;font-size:12px;">pip install selenium gspread google-auth webdriver-manager</p>
+          <p style="background:#f5f5f5;padding:8px 12px;border-radius:6px;font-family:monospace;margin-top:8px;font-size:12px;">${bot.pip}</p>
         </div>
       </div>
 
