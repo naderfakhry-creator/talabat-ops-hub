@@ -58,6 +58,12 @@ const bots = {
     desc: "بيفك البريكات العادية بس — بيتجنب بريكات السيستم",
     py_raw: "https://raw.githubusercontent.com/naderfakhry-creator/talabat-ops-hub/main/bots/revoke_main/hurrier_bot.py",
     bat_raw: "https://raw.githubusercontent.com/naderfakhry-creator/talabat-ops-hub/main/bots/revoke_main/run_revoke_main.bat"
+  },
+  extend_shifts: {
+    title: "Extend Shifts",
+    desc: "بيمد الشيفتات للطيارين حسب طلب الوكلاء أوتوماتيك",
+    py_raw: "https://raw.githubusercontent.com/naderfakhry-creator/talabat-ops-hub/main/bots/extend_shifts/extend_shifts_bot.py",
+    bat_raw: "https://raw.githubusercontent.com/naderfakhry-creator/talabat-ops-hub/main/bots/extend_shifts/run_bot.bat"
   }
 };
 
@@ -78,7 +84,7 @@ if (!bot) {
       <div class="step">
         <div class="step-num">1</div>
         <div class="step-content">
-          <h3>تحميل ملف hurrier_bot.py</h3>
+          <h3>تحميل ملف البوت</h3>
           <p>الملف الرئيسي اللي بيشغل البوت</p>
           <div class="btn-row">
             <a class="btn" href="${bot.py_raw}" target="_blank">عرض الكود</a>
@@ -90,7 +96,7 @@ if (!bot) {
               <li>اعمل <b>Ctrl+A</b> عشان تحدد كله، بعدين <b>Ctrl+C</b></li>
               <li>اضغط <b>Windows+R</b>، اكتب <b>notepad</b>، اضغط Enter</li>
               <li>اعمل <b>Ctrl+V</b> عشان تلصق الكود</li>
-              <li>اضغط <b>File → Save As</b>، اختار Desktop، واكتب الاسم: <b>hurrier_bot.py</b></li>
+              <li>اضغط <b>File → Save As</b>، اختار Desktop، واكتب الاسم بتاع الملف</li>
               <li>في Save as type اختار <b>All Files</b> واضغط Save</li>
             </ol>
           </div>
