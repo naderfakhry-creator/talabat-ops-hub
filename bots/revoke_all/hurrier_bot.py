@@ -69,7 +69,9 @@ def revoke_break(driver, rider_id, main_only=False):
         search = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, "input[placeholder*='Search'], input[type='search']"))
         )
-        search.clear()
+        search.click()
+        search.send_keys(Keys.CONTROL + "a")
+        search.send_keys(Keys.DELETE)
         search.send_keys(rider_id)
         time.sleep(2)
 
@@ -80,7 +82,9 @@ def revoke_break(driver, rider_id, main_only=False):
             result.click()
             time.sleep(2)
         except:
-            search.clear()
+            search.click()
+            search.send_keys(Keys.CONTROL + "a")
+            search.send_keys(Keys.DELETE)
             time.sleep(1)
             return "ID غلط"
 
