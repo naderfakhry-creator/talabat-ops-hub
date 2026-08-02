@@ -290,9 +290,14 @@ def process_rider(driver, rider_id, end_time_str):
                 log(f"  ⏰ الدائرة #{circle_idx+1} | الشاشة: {end_dt.strftime('%I:%M %p')} | الهدف: {target_dt.strftime('%I:%M %p')}")
 
                 if end_dt > target_dt:
-                    log(f"  ⚠️ الشيفت ازيد من اللي مبعوت")
-                    hard_reset(driver)
-                    return "الشيفت ازيد من اللي مبعوت"
+                    if extended_once:
+                        log(f"  ✅ الشيفت اتمد وعدى الهدف — مقبول")
+                        hard_reset(driver)
+                        return "مقبول"
+                    else:
+                        log(f"  ⚠️ الشيفت ازيد من اللي مبعوت")
+                        hard_reset(driver)
+                        return "الشيفت ازيد من اللي مبعوت"
 
                 if end_dt == target_dt:
                     log(f"  🎉 وصلنا للهدف!")
