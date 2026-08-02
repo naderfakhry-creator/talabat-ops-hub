@@ -16,15 +16,13 @@ from selenium.webdriver.chrome.options import Options
 import gspread
 from google.oauth2.service_account import Credentials
 
-# ═══════════════════════════════════════════════════════════
-#  CONFIG
-# ═══════════════════════════════════════════════════════════
 SPREADSHEET_URL  = "https://docs.google.com/spreadsheets/d/126WG53_lRImEChRsNfWGSRR3V1ZoVFu5TNZZ829Q48c/edit"
 SHEET_TAB_NAME   = "Extend Shifts"
-RIDER_ID_COL     = 7
-END_TIME_COL     = 5
-STATUS_COL       = 9
-RESULT_COL       = 10
+RIDER_ID_COL     = 7   # Column G
+SP_STATUS_COL    = 8   # Column H
+END_TIME_COL     = 5   # Column E
+STATUS_COL       = 9   # Column I
+RESULT_COL       = 10  # Column J
 
 SKIP_STATUSES    = ["مقبول", "مرفوض", "غير قابل", "عارض للبدل", "not found", "الشيفت ازيد من اللي مبعوت", "مش حاجز/ شيفته خلص"]
 CHECK_INTERVAL   = 30
@@ -74,12 +72,13 @@ def get_pending(sheet):
     for i, row in enumerate(rows[1:], start=2):
         if len(row) < RIDER_ID_COL:
             continue
-        rider_id = row[RIDER_ID_COL - 1].strip()
-        end_time = row[END_TIME_COL - 1].strip() if len(row) >= END_TIME_COL else ""
-        status   = row[STATUS_COL   - 1].strip() if len(row) >= STATUS_COL   else ""
-        result   = row[RESULT_COL   - 1].strip() if len(row) >= RESULT_COL   else ""
+        rider_id  = row[RIDER_ID_COL - 1].strip()
+        sp_status = row[SP_STATUS_COL - 1].strip() if len(row) >= SP_STATUS_COL else ""
+        end_time  = row[END_TIME_COL - 1].strip() if len(row) >= END_TIME_COL else ""
+        status    = row[STATUS_COL   - 1].strip() if len(row) >= STATUS_COL   else ""
+        result    = row[RESULT_COL   - 1].strip() if len(row) >= RESULT_COL   else ""
         if rider_id and rider_id != "Not Found" and end_time and status not in SKIP_STATUSES and result not in SKIP_STATUSES:
-            pending.append((i, rider_id, end_time))
+            pending.append((i, rider_id, end_time, sp_status))
     return pending
 
 def update_sheet(sheet, row_num, value):
@@ -189,7 +188,6 @@ def process_rider(driver, rider_id, end_time_str):
         hard_reset(driver)
         log(f"  🔍 بحث (ID: {rider_id})")
 
-        # 1. سرش
         try:
             wait = WebDriverWait(driver, 10)
             search = wait.until(EC.element_to_be_clickable(
@@ -203,7 +201,6 @@ def process_rider(driver, rider_id, end_time_str):
         except:
             return "غير قابل"
 
-        # 2. اختيار الطيار
         try:
             no_res = driver.find_elements(By.XPATH, "//*[contains(text(),'No results') or contains(text(),'no results')]")
             if any(e.is_displayed() for e in no_res):
@@ -217,7 +214,6 @@ def process_rider(driver, rider_id, end_time_str):
         except:
             return "not found"
 
-        # 3. فتح تاب Shift
         try:
             all_shift = driver.find_elements(By.XPATH, "//*[text()='Shift' or contains(text(),'Shift')]")
             shift_tab = None
@@ -235,7 +231,6 @@ def process_rider(driver, rider_id, end_time_str):
         except:
             return "غير قابل"
 
-        # 4. تحقق من أول شيفت — مرة وحدة بس
         circles = get_circles(driver)
         if not circles:
             log("  ⚠️ لا توجد دوائر.")
@@ -254,11 +249,11 @@ def process_rider(driver, rider_id, end_time_str):
         except:
             pass
 
-        # 5. حلقة الدوائر — بدون تحقق من التاريخ
-        circle_idx   = 0
-        max_attempts = 50
-        attempts     = 0
-        last_circle  = None
+        circle_idx    = 0
+        max_attempts  = 50
+        attempts      = 0
+        last_circle   = None
+        extended_once = False
 
         while attempts < max_attempts:
             attempts += 1
@@ -304,7 +299,6 @@ def process_rider(driver, rider_id, end_time_str):
                     hard_reset(driver)
                     return "مقبول"
 
-                # ضغط الدائرة
                 try:
                     circle_btn = row_el.find_element(By.XPATH, ".//*[contains(@class,'HalfTimeIcon')]")
                     try:
@@ -325,6 +319,7 @@ def process_rider(driver, rider_id, end_time_str):
                 log(f"  📢 Toast: [{toast}]")
 
                 if toast == "green":
+                    extended_once = True
                     time.sleep(1.5)
                     _, new_end = read_row_times(row_el)
                     if new_end and new_end >= target_dt:
@@ -337,19 +332,25 @@ def process_rider(driver, rider_id, end_time_str):
                     return "عارض للبدل"
 
                 elif toast == "red":
-                    safe_esc(driver)
-                    deadline = time.time() + 10
-                    while time.time() < deadline:
-                        red_still = driver.find_elements(By.XPATH, "//*[contains(text(),'request conflicts with an existing')]")
-                        if not any(r.is_displayed() for r in red_still):
-                            break
-                        time.sleep(0.3)
-                    circle_idx += 1; continue
+                    if extended_once:
+                        log(f"  ✅ red بعد extend — مقبول")
+                        hard_reset(driver)
+                        return "مقبول"
+                    else:
+                        safe_esc(driver)
+                        deadline = time.time() + 10
+                        while time.time() < deadline:
+                            red_still = driver.find_elements(By.XPATH, "//*[contains(text(),'request conflicts with an existing')]")
+                            if not any(r.is_displayed() for r in red_still):
+                                break
+                            time.sleep(0.3)
+                        circle_idx += 1; continue
 
                 else:
                     time.sleep(2)
                     _, fallback = read_row_times(row_el)
                     if fallback and fallback != end_dt:
+                        extended_once = True
                         if fallback >= target_dt:
                             hard_reset(driver)
                             return "مقبول"
@@ -374,7 +375,7 @@ def process_rider(driver, rider_id, end_time_str):
 
 def main():
     print("=" * 55)
-    print("   Extend Shifts Bot")
+    print("   Nader")
     print("=" * 55)
 
     if not os.path.exists(CREDENTIALS_FILE):
@@ -404,8 +405,16 @@ def main():
             pending = get_pending(sheet)
             if pending:
                 log(f"⏳ وُجد {len(pending)} صف للمعالجة.")
-                for row_num, rider_id, end_time in pending:
+                for row_num, rider_id, end_time, sp_status in pending:
                     log(f"🔄 صف [{row_num}] | ID: {rider_id} | الهدف: {end_time}")
+
+                    # فحص Column H — لو Not Found يكتب مرفوض ويعدي
+                    if sp_status.strip().lower() == "not found":
+                        log(f"  ⚠️ Not Found في Column H — مرفوض")
+                        update_sheet(sheet, row_num, "مرفوض")
+                        time.sleep(1)
+                        continue
+
                     result = process_rider(driver, rider_id, end_time)
                     update_sheet(sheet, row_num, result)
                     log(f"📝 صف [{row_num}] ← '{result}'")
